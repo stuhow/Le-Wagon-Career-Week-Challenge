@@ -1,4 +1,8 @@
 # Load data
+import pandas as pd
+from sklearn.model_selection import train_test_split
+
+
 def load():
     # load data
     base_df = pd.read_csv('raw_data/dataset.csv', sep=';')
@@ -24,6 +28,6 @@ def load():
     val_dataset = X_val.join(y_val)
 
     # save train, test & val dataframes
-    train_dataset.to_csv('train_dataset.csv', index=False)
-    test_dataset.to_csv('test_dataset.csv', index=False)
-    val_dataset.to_csv('val_dataset.csv', index=False)
+    train_dataset.to_csv('raw_data/train_dataset.csv', index=False)
+    test_dataset.to_csv('raw_data/test_dataset.csv', index=False)
+    val_dataset.to_csv('raw_data/val_dataset.csv', index=False)

@@ -1,3 +1,13 @@
+from imblearn.pipeline import Pipeline as imbPipeline
+from sklearn.compose import ColumnTransformer
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import MinMaxScaler
+from imblearn.over_sampling import SMOTE
+from imblearn.under_sampling import RandomUnderSampler
+from sklearn.feature_selection import SelectFromModel
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.preprocessing import OneHotEncoder
+from helper_functions.preprocess import custom_imputer, time_tranformer
 
 def pipeline():
     preproc_ordinal = make_pipeline(
@@ -28,7 +38,7 @@ def pipeline():
         ('time', preproc_time, time_features)],
         remainder="drop")
 
-    final_preproc_pipeline = Pipeline(steps=[('pipe',preproc_pipeline),
+    final_preproc_pipeline = imbPipeline(steps=[('pipe',preproc_pipeline),
                                             ('smote',SMOTE(sampling_strategy=0.1)),
                                             ('RandomUnderSampler', RandomUnderSampler(sampling_strategy=0.5)),
                                             ('feature selecter', preproc_selector_multi)
