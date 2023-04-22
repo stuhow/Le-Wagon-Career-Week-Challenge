@@ -9,7 +9,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import OneHotEncoder
 from helper_functions.preprocess import custom_imputer, time_tranformer
 
-def pipeline():
+def pipeline(numerical_features, ordinal_features, nominal_features, time_features):
     preproc_ordinal = make_pipeline(
     custom_imputer(),
     MinMaxScaler())
