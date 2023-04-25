@@ -1,8 +1,61 @@
 # preprocess, train & predict
 from helper_functions.data import load
 from helper_functions.pipeline import pipeline
-import os
 import pandas as pd
+import pickle
+from sklearn.model_selection import cross_val_score
+
+
+
+def load_split_data():
+    '''
+    A function that loads the raw data, breaks out the submission dataset and
+    then spliet the rest into train, test, validation datasets
+    '''
+    load()
+
+
+def train(numerical_features, ordinal_features, nominal_features, time_features):
+    # import training dataset
+    train_dataset = pd.read_csv('raw_data/train_dataset.csv')
+
+    # set target and variables
+    X_train = train_dataset.drop(columns=['default'])
+    y_train = train_dataset.default
+
+    # preprocessing pipeline
+    preproc_pipeline = pipeline(numerical_features, ordinal_features, nominal_features, time_features)
+
+    # fit to training data
+    preproc_pipeline.fit(X_train, y_train)
+
+    # Export Pipeline as pickle file
+    with open("models/pipeline.pkl", "wb") as file:
+        pickle.dump(preproc_pipeline, file)
+
+    pass
+
+def evaluate():
+
+    # Load Pipeline from pickle file
+    my_pipeline = pickle.load(open("models/pipeline.pkl","rb"))
+
+    # import testing dataset
+    train_dataset = pd.read_csv('raw_data/train_dataset.csv')
+
+    # set target and variables
+    X_test = train_dataset.drop(columns=['default'])
+    y_test = train_dataset.default
+
+    print(my_pipeline.get_params())
+
+    # cross validate
+    # cv_score = cross_val_score(my_pipeline, X_test, y_test, cv=5, scoring='accuracy')
+    # print(cv_score.mean())
+    # pass
+
+def predict():
+    pass
 
 numerical_features = ['account_amount_added_12_24m',
                       'account_days_in_dc_12_24m',
@@ -46,37 +99,8 @@ nominal_features = ['merchant_category', 'merchant_group', 'has_paid', 'name_in_
 
 time_features = ['time_hours']
 
-def load_split_data():
-    '''
-    A function that loads the raw data, breaks out the submission dataset and
-    then spliet the rest into train, test, validation datasets
-    '''
-    load()
-
-
-def train():
-    # import training dataset
-    train_dataset = pd.read_csv('raw_data/train_dataset.csv')
-
-    # set target and variables
-    X_train = train_dataset.drop(columns=['default'])
-    y_train = train_dataset.default
-
-    # preprocessing pipeline
-    preproc_pipeline = pipeline(numerical_features, ordinal_features, nominal_features, time_features)
-
-    # transform training data
-    preproc_data = preproc_pipeline.fit_transform(X_train, y_train)
-    pass
-
-def evaluate():
-    pass
-
-def predict():
-    pass
-
 if __name__ == "__main__":
-    load_split_data()
-    train()
+    # load_split_data()
+    # train(numerical_features, ordinal_features, nominal_features, time_features)
     evaluate()
     predict()

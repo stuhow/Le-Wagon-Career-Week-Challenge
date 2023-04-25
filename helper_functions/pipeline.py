@@ -41,6 +41,7 @@ def pipeline(numerical_features, ordinal_features, nominal_features, time_featur
     final_preproc_pipeline = imbPipeline(steps=[('pipe',preproc_pipeline),
                                             ('smote',SMOTE(sampling_strategy=0.1)),
                                             ('RandomUnderSampler', RandomUnderSampler(sampling_strategy=0.5)),
-                                            ('feature selecter', preproc_selector_multi)
+                                            ('feature selecter', preproc_selector_multi),
+                                            ('model', RandomForestClassifier(max_depth=4))
                                             ])
     return final_preproc_pipeline
